@@ -1,8 +1,3 @@
-export interface Cell {
-    opened: boolean;
-    hasMine: boolean;
-    marked: boolean;
-}
 export interface Size {
     height: number;
     width: number;
@@ -20,16 +15,25 @@ interface Coordinate {
     x: number;
     y: number;
 }
+export interface Cell {
+    opened: boolean;
+    hasMine: boolean;
+    marked: boolean;
+    location: Coordinate;
+    mines: number;
+}
 export declare class Game {
     field: Field;
     size: Size;
-    mines: number;
+    minesCount: number;
     lost: boolean;
+    mines: Cell[];
     constructor(options?: Options);
     generate(): void;
     setMines(): void;
     getCell(coordinate: Coordinate): Cell;
     traverse(coordinate: Coordinate, visited?: Visited): void;
     open(coordinate: Coordinate): void;
+    openAll(): void;
 }
 export {};

@@ -1,9 +1,3 @@
-export interface Cell {
-  opened: boolean
-  hasMine: boolean
-  marked: boolean
-}
-
 export interface Size {
   height: number
   width: number
@@ -26,6 +20,14 @@ interface Coordinate {
   y: number
 }
 
+export interface Cell {
+  opened: boolean
+  hasMine: boolean
+  marked: boolean
+  location: Coordinate
+  mines: number
+}
+
 const withinField = (coordinate: Coordinate, size: Size): boolean => {
   return coordinate.x >= 0 && coordinate.y >= 0 && coordinate.x < size.width && coordinate.y < size.height
 }
@@ -44,11 +46,20 @@ const directions: Coordinate[] = [
   { x: 0, y: 1 }
 ]
 
+const allDirections: Coordinate[] = [
+  {x: -1, y: -1},
+  {x: 1, y: 1},
+  {x: 1, y: -1},
+  {x: -1, y: 1},
+  ...directions
+]
+
 export class Game {
   field: Field
   size: Size
-  mines: number
+  minesCount: number
   lost: boolean = false
+  mines: Cell[]
 
   constructor(
     options: Options = {
@@ -62,7 +73,7 @@ export class Game {
     const { size, mines }: { size: Size; mines: number } = options
 
     this.size = size
-    this.mines = mines
+    this.minesCount = mines
     this.generate()
   }
 
@@ -71,10 +82,13 @@ export class Game {
     for (let y = 0; y < this.size.height; y++) {
       const col: Col = []
       for (let x = 0; x < this.size.width; x++) {
+        const location: Coordinate = {x, y};
         col.push({
           opened: false,
           hasMine: false,
-          marked: false
+          marked: false,
+          mines: 0,
+          location
         })
       }
       field.push(col)
@@ -85,14 +99,28 @@ export class Game {
 
   setMines() {
     const fieldCopy: Cell[] = this.field.slice().flat()
-    for (let i = 0; i < this.mines; i++) {
+    this.mines = [];
+    for (let i = 0; i < this.minesCount; i++) {
       const random: Cell = fieldCopy.splice(~~(Math.random() * fieldCopy.length), 1)[0]
       random.hasMine = true
+      this.mines.push(random);
     }
+
+    // Add number of mines to all non-mines fields
+    this.mines.forEach(m => {
+      const {x, y} = m.location;
+      allDirections.forEach(dir => {
+        const cell = this.getCell({x: x + dir.x, y: y + dir.y});
+        if (!cell || cell.hasMine) return;
+        cell.mines++;
+      })
+    })
+
   }
 
+
   getCell(coordinate: Coordinate) {
-    return this.field[coordinate.y][coordinate.x]
+    return this.field[coordinate.y]?.[coordinate.x]
   }
 
   traverse(coordinate: Coordinate, visited: Visited = {}) {
@@ -112,5 +140,9 @@ export class Game {
       return
     }
     this.traverse(coordinate)
+  }
+
+  openAll() {
+    this.field.flat().forEach(c => c.opened = true);
   }
 }
