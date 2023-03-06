@@ -6,8 +6,8 @@
     "target": "es6",
     "allowJs": true,
     "declaration": true,
-    "declarationDir": "./lib/types",
-    "moduleResolution": "nodenext",
+    "declarationDir": "./types",
+    "moduleResolution": "nodenext"
   },
-  "include": ["./src/**/*.tsx", "./src/**/*.ts", "./jest.config.ts"]
+  "include": ["./src/**/*.tsx", "./src/**/*.ts"]
 }

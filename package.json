@@ -7,7 +7,7 @@
     "test": "jest",
     "prettify": "prettier --write .   "
   },
-  "types": "dist/minesweeper.d.ts",
+  "types": "types/index.d.ts",
   "author": "Michael Makarov",
   "prepublishOnly": "webpack --mode=production",
   "license": "ISC",
