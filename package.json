@@ -1,6 +1,6 @@
 {
   "name": "mindsweeper",
-  "version": "1.0.3`",
+  "version": "1.0.3",
   "description": "Business logic for the classic game Minesweeper",
   "main": "dist/minesweeper.js",
   "scripts": {
