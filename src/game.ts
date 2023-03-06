@@ -46,13 +46,7 @@ const directions: Coordinate[] = [
   { x: 0, y: 1 }
 ]
 
-const allDirections: Coordinate[] = [
-  {x: -1, y: -1},
-  {x: 1, y: 1},
-  {x: 1, y: -1},
-  {x: -1, y: 1},
-  ...directions
-]
+const allDirections: Coordinate[] = [{ x: -1, y: -1 }, { x: 1, y: 1 }, { x: 1, y: -1 }, { x: -1, y: 1 }, ...directions]
 
 export class Game {
   field: Field
@@ -82,7 +76,7 @@ export class Game {
     for (let y = 0; y < this.size.height; y++) {
       const col: Col = []
       for (let x = 0; x < this.size.width; x++) {
-        const location: Coordinate = {x, y};
+        const location: Coordinate = { x, y }
         col.push({
           opened: false,
           hasMine: false,
@@ -99,25 +93,23 @@ export class Game {
 
   setMines() {
     const fieldCopy: Cell[] = this.field.slice().flat()
-    this.mines = [];
+    this.mines = []
     for (let i = 0; i < this.minesCount; i++) {
       const random: Cell = fieldCopy.splice(~~(Math.random() * fieldCopy.length), 1)[0]
       random.hasMine = true
-      this.mines.push(random);
+      this.mines.push(random)
     }
 
     // Add number of mines to all non-mines fields
-    this.mines.forEach(m => {
-      const {x, y} = m.location;
-      allDirections.forEach(dir => {
-        const cell = this.getCell({x: x + dir.x, y: y + dir.y});
-        if (!cell || cell.hasMine) return;
-        cell.mines++;
+    this.mines.forEach((m) => {
+      const { x, y } = m.location
+      allDirections.forEach((dir) => {
+        const cell = this.getCell({ x: x + dir.x, y: y + dir.y })
+        if (!cell || cell.hasMine) return
+        cell.mines++
       })
     })
-
   }
-
 
   getCell(coordinate: Coordinate) {
     return this.field[coordinate.y]?.[coordinate.x]
@@ -142,7 +134,12 @@ export class Game {
     this.traverse(coordinate)
   }
 
+  mark(coordinate: Coordinate) {
+    const cell: Cell = this.getCell(coordinate)
+    cell.marked = true
+  }
+
   openAll() {
-    this.field.flat().forEach(c => c.opened = true);
+    this.field.flat().forEach((c) => (c.opened = true))
   }
 }

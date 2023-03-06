@@ -34,6 +34,7 @@ export declare class Game {
     getCell(coordinate: Coordinate): Cell;
     traverse(coordinate: Coordinate, visited?: Visited): void;
     open(coordinate: Coordinate): void;
+    mark(coordinate: Coordinate): void;
     openAll(): void;
 }
 export {};
